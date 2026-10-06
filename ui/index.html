@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!-- FIREAC (https://github.com/AmirrezaJaberi/FIREAC) - AGPL-3.0.
+     [BREACH] 2026-10-05 : page traduite, aux couleurs et au logo BREACH ; onglets Soi / Entites / Teleportation /
+     Vehicule retires (le F9 de Breach_Admin les fait, et ils contournaient ox_inventory et les cles).
+     Les sections restent dans la page, masquees, pour ne rien casser dans script.js.
+     Original : index.html.avant-breach -->
+<html lang="fr">
+<head>
+  <title>BREACH - Anticheat</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link href="./css/style.css" rel="stylesheet">
+  <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+</head>
+<body>
+  <section class="fireac-shell" id="main-ui" style="display:none;">
+    <div class="fireac-panel fireac-panel--tabs">
+      <header class="fireac-header">
+        <div class="brand-lockup">
+          <div class="brand-mark"><img src="./assists/logo.png" alt="BREACH"></div>
+          <div class="brand-copy">
+            <strong>BREACH</strong>
+            <small>ANTICHEAT</small>
+          </div>
+        </div>
+        <div class="page-title">
+          <span id="breadcrumb">Tableau de bord</span>
+          <h1 id="title">Anticheat</h1>
+        </div>
+        <div class="header-actions">
+          <div class="status-pill"><i></i><span>Protégé</span></div>
+          <button class="back-button" id="header-back" onclick="goBack()" style="display:none;">Retour</button>
+          <button class="close-button" onclick="closeUI()" aria-label="Fermer">×</button>
+        </div>
+      </header>
+
+      <nav class="admin-tabs" aria-label="Onglets de l'anticheat">
+        <button class="tab-button is-active" data-page="home" onclick="openPage('home')"><span>⌁</span>Tableau de bord</button>
+        <button class="tab-button" data-page="players" onclick="openPage('players')"><span>👥</span>Joueurs</button>
+        <button class="tab-button" data-page="bans" onclick="openPage('bans')"><span>⛔</span>Bannis</button>
+        <button class="tab-button" data-page="admins" onclick="openPage('admins')"><span>🛡️</span>Admins</button>
+        <button class="tab-button" data-page="whitelist" onclick="openPage('whitelist')"><span>✅</span>Liste blanche</button>
+        <button class="tab-button" data-page="unban" onclick="openPage('unban')"><span>🔓</span>Droit de débannir</button>
+      </nav>
+
+      <main class="fireac-body">
+        <section class="view view-home is-active" id="view-home" data-title="Anticheat" data-breadcrumb="Tableau de bord">
+          <div class="hero-card hero-card--dashboard">
+            <div>
+              <span class="eyebrow">SURVEILLANCE EN DIRECT</span>
+              <h2>Protection BREACH</h2>
+              <p>Les admins BREACH (rang ou F9) ne sont jamais sanctionnés. Les détections douteuses sont seulement
+                 signalées (console et Discord) ; les bannissements automatiques sont réservés aux tricheries certaines.</p>
+            </div>
+            <div class="hero-orb"><span>F9</span><small>BREACH</small></div>
+          </div>
+
+          <div class="dashboard-grid dashboard-grid--center" id="dashboard-grid">
+            <button class="dash-card primary" data-page="players" onclick="openPage('players')"><span class="card-icon">👥</span><strong id="stat-players">0</strong><small>Joueurs en ligne</small><em>Voir les joueurs</em></button>
+            <button class="dash-card danger" data-page="bans" onclick="openPage('bans')"><span class="card-icon">⛔</span><strong id="stat-bans">0</strong><small>Bannis</small><em>Liste des bannissements</em></button>
+            <button class="dash-card" data-page="admins" onclick="openPage('admins')"><span class="card-icon">🛡️</span><strong id="stat-admins">0</strong><small>Admins FIREAC</small><em>En plus des admins BREACH</em></button>
+            <button class="dash-card" data-page="whitelist" onclick="openPage('whitelist')"><span class="card-icon">✅</span><strong id="stat-whitelist">0</strong><small>Liste blanche</small><em>Jamais sanctionnés</em></button>
+            <button class="dash-card" data-page="unban" onclick="openPage('unban')"><span class="card-icon">🔓</span><strong id="stat-unban">0</strong><small>Droit de débannir</small><em>Qui peut débannir</em></button>
+            <button class="dash-card" style="cursor:default"><span class="card-icon">🚗</span><strong id="stat-vehicles">0</strong><small>Véhicules</small><em>Sur le serveur</em></button>
+            <button class="dash-card" style="cursor:default"><span class="card-icon">📦</span><strong id="stat-props">0</strong><small>Objets</small><em>Sur le serveur</em></button>
+            <button class="dash-card" style="cursor:default"><span class="card-icon">🧍</span><strong id="stat-peds">0</strong><small>PNJ</small><em>Zombies compris</em></button>
+          </div>
+
+          <div class="overview-grid">
+            <div class="overview-card">
+              <div class="section-head compact"><h2>Derniers admins</h2><p>Les 5 derniers ajoutés dans FIREAC.</p></div>
+              <div class="record-list mini" id="overview-admins"></div>
+            </div>
+            <div class="overview-card">
+              <div class="section-head compact"><h2>Derniers bannis</h2><p>Les 5 derniers bannissements.</p></div>
+              <div class="record-list mini" id="overview-bans"></div>
+            </div>
+          </div>
+
+          <!-- [BREACH] gardes pour script.js (etat des modes de l'onglet Soi, retire) -->
+          <div style="display:none">
+            <div id="status-card-godmode"><b id="status-godmode">OFF</b></div>
+            <div id="status-card-invisible"><b id="status-invisible">OFF</b></div>
+            <div id="status-card-vision"><b id="status-vision">Normal</b></div>
+            <div id="status-card-spectate"><b id="status-spectate">OFF</b></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-players" data-title="Joueurs" data-breadcrumb="Tableau de bord / Joueurs">
+          <div class="section-head"><h2>Joueurs</h2><p>Clique sur un joueur pour l'observer, l'expulser ou le bannir.</p></div>
+          <div class="search-box"><span>Recherche</span><input class="record-search" data-target=".playerList" type="text" placeholder="Nom, numéro, ID BREACH, admin..." autocomplete="off"></div>
+          <div class="list-grid playerList"></div>
+          <div class="playerAction action-panel" style="display:none;">
+            <div class="action-panel-head"><button class="mini-back" onclick="closePlayerActionMenu()">Retour aux joueurs</button><strong id="playerName">Joueur</strong><span>#<b id="playerId">0</b></span></div>
+            <div class="mini-stats"><div><small>Santé</small><b id="heartCount">0</b></div><div><small>Armure</small><b id="armourCount">0</b></div></div>
+            <div class="moderation-box">
+              <label>Raison (expulsion / bannissement)</label>
+              <input id="moderation-reason" type="text" maxlength="180" placeholder="Ex. : menu de triche, exploit, spam d'événements..." autocomplete="off">
+            </div>
+            <div class="tool-grid five player-action-grid">
+              <button class="tool-card compact" onclick="doActionOnTargetPlayer('spectate')"><span>🎥</span><b>Observer</b></button>
+              <button class="tool-card compact danger" onclick="doActionOnTargetPlayer('kickPlayer')"><span>👢</span><b>Expulser</b><small>Avec la raison</small></button>
+              <button class="tool-card compact danger" onclick="doActionOnTargetPlayer('ban')"><span>⛔</span><b>Bannir</b><small>Avec la raison</small></button>
+              <button class="tool-card compact" onclick="doActionOnTargetPlayer('addToWhiteList')"><span>✅</span><b>Liste blanche</b></button>
+              <button class="tool-card compact" onclick="doActionOnTargetPlayer('addToUnban')"><span>🔓</span><b>Droit de débannir</b></button>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-bans" data-title="Bannis" data-breadcrumb="Tableau de bord / Bannis"><div class="section-head"><h2>Bannis</h2><p>Clique sur un bannissement pour le lever.</p></div><div class="search-box"><span>Recherche</span><input class="record-search" data-target="#ban-records" type="text" placeholder="Nom, n° de bannissement, raison..." autocomplete="off"></div><div class="record-list paged-list" id="ban-records"></div><div class="pager" id="ban-pager"></div></section>
+
+        <section class="view" id="view-admins" data-title="Admins FIREAC" data-breadcrumb="Tableau de bord / Admins">
+          <div class="section-head"><h2>Admins FIREAC</h2><p>Les admins BREACH le sont déjà. Ajoute ici seulement quelqu'un qui doit gérer l'anticheat sans être admin BREACH.</p></div>
+          <div class="access-picker"><div class="access-picker-head"><div><h3>Ajouter un joueur en ligne</h3><p>Le serveur garde son nom et son compte.</p></div><button type="button" onclick="refreshAccessPlayers('admins')">Actualiser</button></div><div class="search-box mini-search"><span>Recherche</span><input class="record-search" data-target="#admin-online-picker" type="text" placeholder="Nom ou numéro..." autocomplete="off"></div><div class="access-player-list" id="admin-online-picker"></div></div>
+          <div class="section-head compact"><h2>Admins enregistrés</h2><p>Clique pour retirer l'accès.</p></div><div class="search-box"><span>Recherche</span><input class="record-search" data-target="#admin-records" type="text" placeholder="Nom..." autocomplete="off"></div><div class="record-list paged-list" id="admin-records"></div><div class="pager" id="admin-pager"></div>
+        </section>
+
+        <section class="view" id="view-unban" data-title="Droit de débannir" data-breadcrumb="Tableau de bord / Droit de débannir"><div class="section-head"><h2>Droit de débannir</h2><p>Clique pour retirer ce droit.</p></div><div class="search-box"><span>Recherche</span><input class="record-search" data-target="#unban-records" type="text" placeholder="Nom..." autocomplete="off"></div><div class="record-list paged-list" id="unban-records"></div><div class="pager" id="unban-pager"></div></section>
+
+        <section class="view" id="view-whitelist" data-title="Liste blanche" data-breadcrumb="Tableau de bord / Liste blanche">
+          <div class="section-head"><h2>Liste blanche</h2><p>Ces joueurs ne sont jamais sanctionnés par l'anticheat (testeurs, développeurs...).</p></div>
+          <div class="access-picker"><div class="access-picker-head"><div><h3>Ajouter un joueur en ligne</h3><p>Le serveur garde son nom et son compte.</p></div><button type="button" onclick="refreshAccessPlayers('whitelist')">Actualiser</button></div><div class="search-box mini-search"><span>Recherche</span><input class="record-search" data-target="#whitelist-online-picker" type="text" placeholder="Nom ou numéro..." autocomplete="off"></div><div class="access-player-list" id="whitelist-online-picker"></div></div>
+          <div class="section-head compact"><h2>Liste actuelle</h2><p>Clique pour retirer.</p></div><div class="search-box"><span>Recherche</span><input class="record-search" data-target="#whitelist-records" type="text" placeholder="Nom..." autocomplete="off"></div><div class="record-list paged-list" id="whitelist-records"></div><div class="pager" id="whitelist-pager"></div>
+        </section>
+
+        <!-- [BREACH] sections retirees du menu (Soi, Entites, Teleportation, Vehicule) : gardees vides et masquees -->
+        <section class="view" id="view-admin" data-title="" data-breadcrumb="" style="display:none"><code class="coords-loaction"></code><small id="godmode-state"></small><small id="invisible-state"></small></section>
+        <section class="view" id="view-server" data-title="" data-breadcrumb="" style="display:none"><small id="server-vehicles"></small><small id="server-props"></small><small id="server-peds"></small></section>
+        <section class="view" id="view-teleport" data-title="" data-breadcrumb="" style="display:none"></section>
+        <section class="view" id="view-vehicle" data-title="" data-breadcrumb="" style="display:none"></section>
+      </main>
+
+      <footer class="fireac-footer"><span>Propulsé par FIREAC (AGPL-3.0)</span><i></i><span>Code source : voir la console du serveur</span><i></i><span>Échap : retour / fermer</span><i></i><b>V7.2.18</b></footer>
+    </div>
+  </section>
+  <script src="./js/script.js" type="text/javascript"></script>
+</body>
+</html>
