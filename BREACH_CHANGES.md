@@ -44,7 +44,14 @@ dans un dépôt public (fork GitHub), puis mettre son adresse dans `FIREAC.Breac
 ## Installation
 - Tables : `database.sql` importé dans `breachv2` (fireac_admin, fireac_banlist, fireac_unban, fireac_whitelist).
 - `server.cfg` : `ensure FIREAC` après `ensure [breach]` (original : `server.cfg.avant-anticheat`).
-- Webhooks Discord : `configs/fire-webhook.lua` (vides pour l'instant). Ne jamais les publier.
+- Webhooks Discord : voir plus bas (fichier local `configs/fire-webhook.local.lua`). Ne jamais les publier.
 
 ## 2026-10-06 — Publication du code modifié (AGPL-3.0)
 - Version modifiée publiée : https://github.com/LK91NWC/FIREAC-BREACH (`FIREAC.Breach.SourceUrl`, `configs/fire-config.lua`).
+
+## 2026-10-06 — Webhooks Discord hors du dépôt public
+- `configs/fire-webhook.lua` reste vide (public). Les vraies URLs vont dans `configs/fire-webhook.local.lua`
+  (ignoré par git, à créer sur le serveur en copiant `configs/fire-webhook.local.example.lua`).
+  Chargé au démarrage (« return { Ban = ... } » ou « FIREAC.Webhooks.Ban = ... ») ; fichier absent = pas d'envoi,
+  fichier invalide = message en console.
+- `src/fire-server.lua` : faute de frappe `Webhooks.Exoplosion` corrigée (le webhook Explosion ne partait jamais).

@@ -1066,7 +1066,7 @@ AddEventHandler("explosionEvent", function(src, data)
     if definition then
         local name = tostring(definition.NAME or data.explosionType or "Unknown")
         if definition.Log then
-            FIREAC_SENDLOG(src, FIREAC.Webhooks and FIREAC.Webhooks.Exoplosion or "", "EXPLOSION", name)
+            FIREAC_SENDLOG(src, FIREAC.Webhooks and FIREAC.Webhooks.Explosion or "", "EXPLOSION", name)
         end
         local punishment = type(definition.Punishment) == "string" and definition.Punishment:upper() or nil
         if punishment == "WARN" or punishment == "KICK" or punishment == "BAN" then
