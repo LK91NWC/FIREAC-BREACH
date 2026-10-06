@@ -55,3 +55,7 @@ dans un dépôt public (fork GitHub), puis mettre son adresse dans `FIREAC.Breac
   Chargé au démarrage (« return { Ban = ... } » ou « FIREAC.Webhooks.Ban = ... ») ; fichier absent = pas d'envoi,
   fichier invalide = message en console.
 - `src/fire-server.lua` : faute de frappe `Webhooks.Exoplosion` corrigée (le webhook Explosion ne partait jamais).
+
+## 2026-10-06 — Note BREACH en tête du README
+- `README.md` : encadré expliquant ce qui diffère de la documentation d'origine (panneau par F9 > BREACH > Anticheat,
+  admins BREACH, commandes de ban, webhooks locaux, captures et anti-VPN coupés).

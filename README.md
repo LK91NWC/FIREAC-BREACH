@@ -5,6 +5,14 @@ Publiée sous la même licence, **GNU AGPL-3.0** (voir `LICENSE`). Les modificat
 
 Modified version of FIREAC by Amirreza Jaberi, released under the GNU AGPL-3.0. Changes are listed in `BREACH_CHANGES.md`.
 
+> **Sur BREACH, la documentation d'origine ci-dessous ne s'applique pas telle quelle :**
+> - **Panneau admin :** il s'ouvre par **F9 > BREACH > Anticheat**. Il n'y a ni touche F9 directe, ni `/fireac`, ni `/fireacmenu`.
+> - **Admins :** les admins BREACH (`exports.Breach_Core:IsAdmin`) sont admins FIREAC d'office ; `addadmin` n'est utile que pour quelqu'un qui n'est pas admin BREACH (console du serveur seulement).
+> - **Bannir / débannir :** `fireacban [ID] [raison]` et `fireacunban [n° de ban]` pour les admins. Un joueur non admin qui les tape est **banni** (`FIREAC.AdminMenu.MenuPunishment`).
+>   `funban` / `unban` demandent en plus l'accès « unban » (`addunban [ID]` depuis la console) : les admins BREACH ne l'ont pas d'office. Depuis la console du serveur, toutes marchent.
+> - **Webhooks Discord :** les URLs vont dans `configs/fire-webhook.local.lua` (ignoré par git), jamais dans `configs/fire-webhook.lua`. Modèle : `configs/fire-webhook.local.example.lua`.
+> - **Captures d'écran et anti-VPN :** désactivés (`configs/fire-config.lua`) ; `discord-screenshot` n'est pas nécessaire.
+
 ---
 
 <h1 align="center">
