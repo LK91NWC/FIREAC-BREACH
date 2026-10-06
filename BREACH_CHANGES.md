@@ -52,5 +52,6 @@ dans un dépôt public (fork GitHub), puis mettre son adresse dans `FIREAC.Breac
 ## 2026-10-06 — Webhooks Discord hors du dépôt public
 - `configs/fire-webhook.lua` reste vide (public). Les vraies URLs vont dans `configs/fire-webhook.local.lua`
   (ignoré par git, à créer sur le serveur en copiant `configs/fire-webhook.local.example.lua`).
-  Chargé au démarrage ; fichier absent = pas d'envoi, fichier invalide = message en console.
+  Chargé au démarrage (« return { Ban = ... } » ou « FIREAC.Webhooks.Ban = ... ») ; fichier absent = pas d'envoi,
+  fichier invalide = message en console.
 - `src/fire-server.lua` : faute de frappe `Webhooks.Exoplosion` corrigée (le webhook Explosion ne partait jamais).

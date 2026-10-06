@@ -20,22 +20,25 @@ FIREAC.Webhooks = {
     ScreenShot = "",
 }
 
--- [BREACH] chargement des URLs locales (si le fichier existe)
+-- [BREACH] chargement des URLs locales (si le fichier existe).
+-- Deux ecritures acceptees : « return { Ban = "..." } » ou « FIREAC.Webhooks.Ban = "..." ».
 do
     local path = "configs/fire-webhook.local.lua"
     local code = LoadResourceFile(GetCurrentResourceName(), path)
     if code then
-        local chunk, err = load(code, "@" .. path, "t", {})
-        local ok, overrides = false, nil
-        if chunk then ok, overrides = pcall(chunk) else overrides = err end
-        if ok and type(overrides) == "table" then
-            for name, url in pairs(overrides) do
+        local env = { FIREAC = { Webhooks = {} } }
+        local chunk, err = load(code, "@" .. path, "t", env)
+        local ok, result = false, err
+        if chunk then ok, result = pcall(chunk) end
+        if ok then
+            local overrides = type(result) == "table" and result or env.FIREAC.Webhooks
+            for name, url in pairs(type(overrides) == "table" and overrides or {}) do
                 if FIREAC.Webhooks[name] ~= nil and type(url) == "string" and url ~= "" then
                     FIREAC.Webhooks[name] = url
                 end
             end
         else
-            print("^1[FIREAC] " .. path .. " invalide : " .. tostring(overrides) .. "^0")
+            print("^1[FIREAC] " .. path .. " invalide : " .. tostring(result) .. "^0")
         end
     end
 end
